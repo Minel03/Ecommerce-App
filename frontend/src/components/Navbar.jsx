@@ -1,9 +1,24 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { assets } from '../assets/frontend_assets/assets';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { ShopContext } from '../context/ShopContext';
 
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
+  const { setShowSearch } = useContext(ShopContext);
+  // added location and navigate to handle the search button click behavior.  If we're already on the collection page, we just show the search bar.  If we're not, we navigate to the collection page and then show the search bar.
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleSearchClick = () => {
+    if (location.pathname.includes('collection')) {
+      setShowSearch(true);
+    } else {
+      navigate('/collection');
+      setShowSearch(true);
+    }
+  };
+
   return (
     <div className='flex items-center justify-between py-5 font-medium'>
       <Link to='/'>
@@ -41,6 +56,7 @@ const Navbar = () => {
       </ul>
       <div className='flex items-center gap-6'>
         <img
+          onClick={handleSearchClick}
           src={assets.search_icon}
           className='w-5 cursor-pointer'
           alt=''
@@ -95,25 +111,25 @@ const Navbar = () => {
           </div>
           <NavLink
             onClick={() => setVisible(false)}
-            className='py-2 pl-6 border-t'
+            className='py-2 pl-6 border-t border-gray-300'
             to='/'>
             HOME
           </NavLink>
           <NavLink
             onClick={() => setVisible(false)}
-            className='py-2 pl-6 border-t'
+            className='py-2 pl-6 border-t border-gray-300'
             to='/collection'>
             COLLECTION
           </NavLink>
           <NavLink
             onClick={() => setVisible(false)}
-            className='py-2 pl-6 border-t'
+            className='py-2 pl-6 border-t border-gray-300'
             to='/about'>
             ABOUT
           </NavLink>
           <NavLink
             onClick={() => setVisible(false)}
-            className='py-2 pl-6 border-t'
+            className='py-2 pl-6 border-t border-gray-300'
             to='/contact'>
             CONTACT
           </NavLink>
