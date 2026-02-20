@@ -5,7 +5,7 @@ import { ShopContext } from '../context/ShopContext';
 
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
-  const { setShowSearch } = useContext(ShopContext);
+  const { setShowSearch, getCartCount } = useContext(ShopContext);
   // added location and navigate to handle the search button click behavior.  If we're already on the collection page, we just show the search bar.  If we're not, we navigate to the collection page and then show the search bar.
   const location = useLocation();
   const navigate = useNavigate();
@@ -84,7 +84,7 @@ const Navbar = () => {
             alt=''
           />
           <p className='absolute -right-1.25 -bottom-1.25 w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]'>
-            10
+            {getCartCount()}
           </p>
         </Link>
         <img
