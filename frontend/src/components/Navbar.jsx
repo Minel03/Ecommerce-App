@@ -1,11 +1,13 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import { assets } from '../assets/assets';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { ShopContext } from '../context/ShopContext';
 
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
-  const [showDropdown, setShowDropdown] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const profileRef = useRef(null);
+
   const {
     setShowSearch,
     getCartCount,
@@ -20,8 +22,9 @@ const Navbar = () => {
     localStorage.removeItem('token');
     setToken('');
     setCartItems({});
+    setProfileOpen(false);
   };
-  // added location and navigate to handle the search button click behavior.  If we're already on the collection page, we just show the search bar.  If we're not, we navigate to the collection page and then show the search bar.
+
   const location = useLocation();
 
   const handleSearchClick = () => {
@@ -32,6 +35,20 @@ const Navbar = () => {
       setShowSearch(true);
     }
   };
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (profileRef.current && !profileRef.current.contains(e.target)) {
+        setProfileOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className='flex items-center justify-between py-5 font-medium'>
@@ -75,26 +92,27 @@ const Navbar = () => {
           className='w-5 cursor-pointer'
           alt=''
         />
-        <div className='group relative'>
+        <div
+          ref={profileRef}
+          className='relative'>
           <img
-            onClick={() => {
-              if (!token) {
-                navigate('/login');
-              } else {
-                setShowDropdown((prev) => !prev);
-              }
-            }}
+            onClick={() =>
+              token ? setProfileOpen(!profileOpen) : navigate('/login')
+            }
             src={assets.profile_icon}
             className='w-5 cursor-pointer'
             alt=''
           />
           {/* Dropdown Menu */}
-          {token && showDropdown && (
-            <div className='absolute right-0 pt-4'>
+          {token && profileOpen && (
+            <div className='absolute dropdown-menu right-0 pt-4 z-50'>
               <div className='flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded'>
                 <p className='cursor-pointer hover:text-black'>My Profile</p>
                 <p
-                  onClick={() => navigate('/orders')}
+                  onClick={() => {
+                    navigate('/orders');
+                    setProfileOpen(false);
+                  }}
                   className='cursor-pointer hover:text-black'>
                   Orders
                 </p>
