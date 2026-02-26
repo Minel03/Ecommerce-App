@@ -13,10 +13,10 @@ export const currency = '$';
 
 const App = () => {
   const [token, setToken] = useState(
-    localStorage.getItem('token') ? localStorage.getItem('token') : '',
+    sessionStorage.getItem('token') ? sessionStorage.getItem('token') : '',
   );
   useEffect(() => {
-    localStorage.setItem('token', token);
+    sessionStorage.setItem('token', token);
   }, [token]);
 
   return (

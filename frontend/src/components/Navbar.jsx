@@ -19,7 +19,7 @@ const Navbar = () => {
 
   const logout = () => {
     navigate('/login');
-    localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
     setToken('');
     setCartItems({});
     setProfileOpen(false);
