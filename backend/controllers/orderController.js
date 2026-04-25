@@ -14,6 +14,10 @@ const razorpayInstance = new razorpay({
   key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
+if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
+  console.error("WARNING: Razorpay keys are missing in backend/.env");
+}
+
 // Placing orders using COD Method
 const placeOrder = async (req, res) => {
   try {

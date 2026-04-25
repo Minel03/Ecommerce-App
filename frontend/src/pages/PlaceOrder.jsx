@@ -135,6 +135,8 @@ const PlaceOrder = () => {
           );
           if (responseRazorpay.data.success) {
             initPay(responseRazorpay.data.order);
+          } else {
+            toast.error(responseRazorpay.data.message);
           }
           break;
 
